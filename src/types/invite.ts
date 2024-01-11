@@ -1,10 +1,16 @@
 import {CommandRequest, z} from './command';
 import {OpenAPIRegistry} from '@asteasolutions/zod-to-openapi';
 
+/**
+ * Media types for invite requests.
+ */
 export const InviteMediaType = {
   INVITE_REQUEST: 'application/vnd.xcorplatform.invite-req.v1+json',
 }
 
+/**
+ * Schema for invite requests.
+ */
 export const InviteRequest = z
   .object({
     email: z.string().email(),
@@ -12,8 +18,14 @@ export const InviteRequest = z
   })
   .openapi('InviteRequest');
 
+/**
+ * Type for invite requests.
+ */
 export type IInviteRequest = z.infer<typeof InviteRequest>;
 
+/**
+ * Command for inviting a user to an org.
+ */
 export class InviteCommand extends CommandRequest<IInviteRequest, void> {
   constructor(readonly data: IInviteRequest) {
     super({
