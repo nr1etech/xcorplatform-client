@@ -5,8 +5,8 @@ import {CommandRequest, CommandResponse, InviteCommand, UserInfoCommand} from '.
 import {OpenApiGeneratorV31, OpenAPIRegistry} from '@asteasolutions/zod-to-openapi';
 import * as yaml from 'js-yaml';
 
-const DEFAULT_AUTH_TOKEN_URL = 'https://secure.ncryptyr.com/connect/token';
-const DEFAULT_BASE_URL = 'https://api.ncryptyr.com';
+const DEFAULT_AUTH_TOKEN_URL = 'https://secure.authsure.com/connect/token';
+const DEFAULT_BASE_URL = 'https://api.xcorplatform.com';
 const USER_AGENT = 'xcorplatform-client';
 
 function checkContentType(contentType: string, response: AxiosResponse): void {
