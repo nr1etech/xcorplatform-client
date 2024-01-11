@@ -28,6 +28,9 @@ function isErrorMessage(error?: IErrorMessage): error is IErrorMessage {
   return error !== undefined && error.message !== undefined;
 }
 
+/**
+ * AuthConfig is used to configure the client credentials grant type.
+ */
 export interface AuthConfig {
   readonly clientId: string;
   readonly clientSecret: string;
@@ -35,11 +38,17 @@ export interface AuthConfig {
   readonly scopes?: string[];
 }
 
+/**
+ * XcorPlatformClientConfig is used to configure the XcorPlatformClient.
+ */
 export interface XcorPlatformClientConfig {
   readonly baseUrl?: string;
   readonly authConfig?: AuthConfig;
 }
 
+/**
+ * XcorPlatformClient is the main entry point for interacting with the Xcor Platform API.
+ */
 export class XcorPlatformClient {
   readonly baseUrl: string;
   protected client = axios.create();
@@ -62,6 +71,11 @@ export class XcorPlatformClient {
     }
   }
 
+  /**
+   * Configure the client to use the client credentials grant type.
+   *
+   * @param config The configuration for the client credentials grant type.
+   */
   auth(config: AuthConfig): XcorPlatformClient {
     this.clientCredentials = new ClientCredentials({
       clientId: config.clientId,
@@ -72,6 +86,9 @@ export class XcorPlatformClient {
     return this;
   }
 
+  /**
+   * Configures the client to log requests.
+   */
   logRequests(): XcorPlatformClient {
     this.client.interceptors.request.use(
       config => {
@@ -85,6 +102,9 @@ export class XcorPlatformClient {
     return this;
   }
 
+  /**
+   * Configures the client to log responses.
+   */
   logResponses(): XcorPlatformClient {
     this.client.interceptors.response.use(
       config => {
@@ -122,6 +142,11 @@ export class XcorPlatformClient {
     }
   }
 
+  /**
+   * Send a command to the Xcor Platform API.
+   *
+   * @param request The command to send.
+   */
   async send<Req, Res>(
     request: CommandRequest<Req, Res>
   ): Promise<CommandResponse<Res>> {
@@ -171,6 +196,9 @@ export class XcorPlatformClient {
     }
   }
 
+  /**
+   * Generate an OpenAPI YAML document for the Xcor Platform API.
+   */
   static openapiYaml(): string {
     const registry = new OpenAPIRegistry();
     InviteCommand.register(registry);

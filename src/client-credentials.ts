@@ -1,5 +1,8 @@
 import axios, {AxiosInstance} from 'axios';
 
+/**
+ * Configuration for the ClientCredentials class
+ */
 export interface ClientCredentialsConfig {
   readonly clientId: string;
   readonly clientSecret: string;
@@ -10,6 +13,9 @@ export interface ClientCredentialsConfig {
   readonly disableBackgroundRefresh?: boolean;
 }
 
+/**
+ * ClientCredentials is a helper class for managing OAuth2 client credentials
+ */
 export class ClientCredentials {
   protected clientId: string;
   protected clientSecret: string;
@@ -22,6 +28,11 @@ export class ClientCredentials {
   protected expiration?: number;
   protected intervalId?: NodeJS.Timeout;
 
+  /**
+   * Create a new ClientCredentials instance
+   *
+   * @param config Configuration for the ClientCredentials instance
+   */
   constructor(config: ClientCredentialsConfig) {
     this.clientId = config.clientId;
     this.clientSecret = config.clientSecret;
@@ -32,6 +43,9 @@ export class ClientCredentials {
     this.disableBackgroundRefresh = config.disableBackgroundRefresh ?? false;
   }
 
+  /**
+   * Get the current access token
+   */
   async getAccessToken(): Promise<string> {
     if (
       this.accessToken === undefined ||
@@ -43,6 +57,9 @@ export class ClientCredentials {
     return this.accessToken!;
   }
 
+  /**
+   * Update the access token. This happens automatically and does not need to be called manually unless disableBackgroundRefresh is set to true.
+   */
   async updateToken(): Promise<void> {
     if (this.intervalId) {
       clearInterval(this.intervalId);
@@ -77,6 +94,9 @@ export class ClientCredentials {
     }
   }
 
+  /**
+   * Close the ClientCredentials instance. This will stop the background refresh of the access token.
+   */
   close() {
     if (this.intervalId) {
       clearInterval(this.intervalId);

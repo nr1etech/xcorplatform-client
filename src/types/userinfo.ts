@@ -1,10 +1,16 @@
 import {CommandRequest, z} from './command';
 import {OpenAPIRegistry} from '@asteasolutions/zod-to-openapi';
 
+/**
+ * Media types for user information requests.
+ */
 export const UserInfoMediaType = {
   USERINFO_RESPONSE: 'application/vnd.xcorplatform.userinfo-res.v1+json',
 }
 
+/**
+ * Schema for user information response.
+ */
 export const UserInfoResponse = z
   .object({
     id: z.string(),
@@ -21,8 +27,14 @@ export const UserInfoResponse = z
   })
   .openapi('InviteRequest');
 
+/**
+ * Type for user information response.
+ */
 export type IUserInfoResponse = z.infer<typeof UserInfoResponse>;
 
+/**
+ * Command for retrieving user information.
+ */
 export class UserInfoCommand extends CommandRequest<void, IUserInfoResponse> {
   constructor(readonly data: void) {
     super({
@@ -32,6 +44,11 @@ export class UserInfoCommand extends CommandRequest<void, IUserInfoResponse> {
     });
   }
 
+  /**
+   * Register the user information command with the given OpenAPI registry.
+   *
+   * @param registry
+   */
   static register(registry: OpenAPIRegistry) {
     registry.registerPath({
       description: 'UserInfo',
@@ -58,5 +75,4 @@ export class UserInfoCommand extends CommandRequest<void, IUserInfoResponse> {
       },
     })
   }
-
 }

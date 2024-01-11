@@ -36,6 +36,11 @@ export class InviteCommand extends CommandRequest<IInviteRequest, void> {
     });
   }
 
+  /**
+   * Register the invite command with the given OpenAPI registry.
+   *
+   * @param registry
+   */
   static register(registry: OpenAPIRegistry) {
     registry.registerPath({
       description: 'Invite',
