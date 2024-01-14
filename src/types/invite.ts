@@ -1,12 +1,6 @@
 import {CommandRequest, z} from './command';
 import {OpenAPIRegistry} from '@asteasolutions/zod-to-openapi';
-
-/**
- * Media types for invite requests.
- */
-export const InviteMediaType = {
-  INVITE_REQUEST: 'application/vnd.xcorplatform.invite-req.v1+json',
-}
+import {MediaType} from './media-types';
 
 /**
  * Schema for invite requests.
@@ -32,7 +26,7 @@ export class InviteCommand extends CommandRequest<IInviteRequest, void> {
       method: 'post',
       path: '/invite',
       data,
-      requestType: InviteMediaType.INVITE_REQUEST,
+      requestType: MediaType.INVITE_REQUEST,
     });
   }
 
@@ -50,7 +44,7 @@ export class InviteCommand extends CommandRequest<IInviteRequest, void> {
       request: {
         body: {
           content: {
-            [InviteMediaType.INVITE_REQUEST]: {
+            [MediaType.INVITE_REQUEST]: {
               schema: InviteRequest,
             },
           },
@@ -62,8 +56,8 @@ export class InviteCommand extends CommandRequest<IInviteRequest, void> {
         },
         '404': {
           description: 'User or org not found',
-        }
+        },
       },
-    })
+    });
   }
 }

@@ -1,12 +1,6 @@
 import {CommandRequest, z} from './command';
 import {OpenAPIRegistry} from '@asteasolutions/zod-to-openapi';
-
-/**
- * Media types for user information requests.
- */
-export const UserInfoMediaType = {
-  USERINFO_RESPONSE: 'application/vnd.xcorplatform.userinfo-res.v1+json',
-}
+import {MediaType} from './media-types';
 
 /**
  * Schema for user information response.
@@ -19,11 +13,13 @@ export const UserInfoResponse = z
     name: z.string(),
     active: z.boolean(),
     email: z.string().email(),
-    orgs: z.array(z.object({
-      id: z.string(),
-      name: z.string(),
-      roles: z.array(z.string())
-    })),
+    orgs: z.array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        roles: z.array(z.string()),
+      })
+    ),
   })
   .openapi('InviteRequest');
 
@@ -40,7 +36,7 @@ export class UserInfoCommand extends CommandRequest<void, IUserInfoResponse> {
     super({
       method: 'get',
       path: '/userinfo',
-      requestType: UserInfoMediaType.USERINFO_RESPONSE,
+      requestType: MediaType.USERINFO_RESPONSE,
     });
   }
 
@@ -58,21 +54,21 @@ export class UserInfoCommand extends CommandRequest<void, IUserInfoResponse> {
       request: {
         headers: z.object({
           authorization: z.string(),
-        })
+        }),
       },
       responses: {
         '200': {
           description: 'UserInfo retrieved successfully',
           content: {
-            [UserInfoMediaType.USERINFO_RESPONSE]: {
+            [MediaType.USERINFO_RESPONSE]: {
               schema: UserInfoResponse,
             },
           },
         },
         '404': {
           description: 'UserInfo not found',
-        }
+        },
       },
-    })
+    });
   }
 }

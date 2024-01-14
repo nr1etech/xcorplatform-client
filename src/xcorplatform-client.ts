@@ -1,22 +1,39 @@
 import axios, {AxiosResponse} from 'axios';
 import {ClientCredentials} from './client-credentials';
 import {toError} from '@nr1e/commons/errors';
-import {CommandRequest, CommandResponse, InviteCommand, UserInfoCommand} from './types';
-import {OpenApiGeneratorV31, OpenAPIRegistry} from '@asteasolutions/zod-to-openapi';
+import {
+  CommandRequest,
+  CommandResponse,
+  InviteCommand,
+  UserInfoCommand,
+} from './types';
+import {
+  OpenApiGeneratorV31,
+  OpenAPIRegistry,
+} from '@asteasolutions/zod-to-openapi';
 import * as yaml from 'js-yaml';
+import {CreateAppCommand, GetAppCommand} from './types/app';
+import * as logging from '@nr1e/logging';
+
+const log = logging.initialize({
+  svc: 'xcorplatform',
+  name: 'xcorplatform-client',
+  level: 'info',
+});
+
+declare let window: unknown;
 
 const DEFAULT_AUTH_TOKEN_URL = 'https://secure.authsure.com/connect/token';
 const DEFAULT_BASE_URL = 'https://api.xcorplatform.com';
 const USER_AGENT = 'xcorplatform-client';
 
-function checkContentType(contentType: string, response: AxiosResponse): void {
-  if (response.headers['content-type'] === undefined) {
-    console.log(`Expected content type ${contentType} and received none`);
+function checkContentType(expected: string, response: AxiosResponse): void {
+  const received = response.headers['content-type'];
+  if (received === undefined) {
+    log.warn({expected}, 'Expected content type and received none');
   }
-  if (response.headers['content-type'] !== contentType) {
-    console.log(
-      `Expected content type ${contentType} and received ${response.headers['content-type']}`
-    );
+  if (received !== expected) {
+    log.warn({expected, received}, 'Expected content type mismatch');
   }
 }
 
@@ -57,15 +74,18 @@ export class XcorPlatformClient {
 
   constructor(props?: XcorPlatformClientConfig) {
     this.baseUrl = props?.baseUrl ?? DEFAULT_BASE_URL;
-    this.client.interceptors.request.use(
-      config => {
-        config.headers['user-agent'] = USER_AGENT;
-        return config;
-      },
-      error => {
-        return Promise.reject(error);
-      }
-    );
+    // Don't set the user-agent in the browser
+    if (typeof window === 'undefined') {
+      this.client.interceptors.request.use(
+        config => {
+          config.headers['user-agent'] = USER_AGENT;
+          return config;
+        },
+        error => {
+          return Promise.reject(error);
+        }
+      );
+    }
     if (props?.authConfig) {
       this.auth(props.authConfig);
     }
@@ -92,7 +112,7 @@ export class XcorPlatformClient {
   logRequests(): XcorPlatformClient {
     this.client.interceptors.request.use(
       config => {
-        console.log('Request', config);
+        log.info({config}, 'Request');
         return config;
       },
       error => {
@@ -108,7 +128,7 @@ export class XcorPlatformClient {
   logResponses(): XcorPlatformClient {
     this.client.interceptors.response.use(
       config => {
-        console.log('Response', config);
+        log.info({config}, 'Response');
         return config;
       },
       error => {
@@ -120,11 +140,11 @@ export class XcorPlatformClient {
   }
 
   protected processError(err: unknown): [Error, number, string] {
-    if (err && axios.isAxiosError(err)) {
-      if (this.logErrorResponses && err.response) {
-        console.log('Error', err.response);
-      }
-      if (err.response && isErrorMessage(err.response?.data)) {
+    if (axios.isAxiosError(err)) {
+      if (err.response) {
+        if (this.logErrorResponses) {
+          log.error({response: err.response}, 'Error response');
+        }
         const message = err.response.data.message;
         return [
           toError(err.response.status, message),
@@ -133,6 +153,7 @@ export class XcorPlatformClient {
         ];
       }
     }
+    // If not an HttpError, we re-throw the error
     if (err instanceof Error) {
       throw err;
     } else if (typeof err === 'object' && err !== null && 'toString' in err) {
@@ -203,6 +224,8 @@ export class XcorPlatformClient {
     const registry = new OpenAPIRegistry();
     InviteCommand.register(registry);
     UserInfoCommand.register(registry);
+    CreateAppCommand.register(registry);
+    GetAppCommand.register(registry);
 
     const generator = new OpenApiGeneratorV31(registry.definitions);
     const result = generator.generateDocument({
