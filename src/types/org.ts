@@ -3,6 +3,7 @@ import {OpenAPIRegistry} from '@asteasolutions/zod-to-openapi';
 import {MediaType} from './media-types';
 
 export const OrgConstraint = {
+  ID_ALLOWED_CHARS: '0-9a-z-',
   ID_REGEX: /^[0-9a-z-]+$/,
   ID_MIN_LENGTH: 3,
   ID_MAX_LENGTH: 64,
