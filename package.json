@@ -54,5 +54,8 @@
     "typedoc": "^0.25.6",
     "typedoc-plugin-zod": "^1.1.2",
     "typescript": "~5.1.6"
+  },
+  "exports": {
+    ".": "./dist/index.js"
   }
 }
