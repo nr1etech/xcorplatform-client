@@ -15,7 +15,7 @@ import * as yaml from 'js-yaml';
 import {CreateAppCommand, GetAppCommand} from './types/app';
 import * as logging from '@nr1e/logging';
 
-const log = logging.initialize({
+const log = await logging.initialize({
   svc: 'xcorplatform',
   name: 'xcorplatform-client',
   level: 'info',

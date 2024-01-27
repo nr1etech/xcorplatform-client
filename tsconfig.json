@@ -3,9 +3,19 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",
-    "module": "ES2020",
+    "target": "ES2022",
+    "module": "ES2022",
     "moduleResolution": "node",
-    "resolveJsonModule": true
+    "importHelpers": true,
+    "lib": ["ES2022", "dom"],
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": true,
+    "types": ["jest"]
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src"],
+  "ts-node": {
+    "esm": true
+  },
+  "exclude": ["node_modules", "**/*.test.ts"]
 }
