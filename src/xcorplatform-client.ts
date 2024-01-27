@@ -15,25 +15,30 @@ import * as yaml from 'js-yaml';
 import {CreateAppCommand, GetAppCommand} from './types/app';
 import * as logging from '@nr1e/logging';
 
-const log = await logging.initialize({
-  svc: 'xcorplatform',
-  name: 'xcorplatform-client',
-  level: 'info',
-});
-
 declare let window: unknown;
 
 const DEFAULT_AUTH_TOKEN_URL = 'https://secure.authsure.com/connect/token';
 const DEFAULT_BASE_URL = 'https://api.xcorplatform.com';
 const USER_AGENT = 'xcorplatform-client';
 
-function checkContentType(expected: string, response: AxiosResponse): void {
+function checkContentType(
+  log: logging.Logger,
+  expected: string,
+  response: AxiosResponse
+): void {
   const received = response.headers['content-type'];
   if (received === undefined) {
-    log.warn({expected}, 'Expected content type and received none');
+    log
+      .warn()
+      .str('expected', expected)
+      .msg('Expected content type and received none');
   }
   if (received !== expected) {
-    log.warn({expected, received}, 'Expected content type mismatch');
+    log
+      .warn()
+      .str('expected', expected)
+      .str('received', received)
+      .msg('Expected content type mismatch');
   }
 }
 
@@ -61,6 +66,7 @@ export interface AuthConfig {
 export interface XcorPlatformClientConfig {
   readonly baseUrl?: string;
   readonly authConfig?: AuthConfig;
+  readonly log?: logging.Logger;
 }
 
 /**
@@ -71,8 +77,10 @@ export class XcorPlatformClient {
   protected client = axios.create();
   protected logErrorResponses = false;
   protected clientCredentials?: ClientCredentials;
+  protected log: logging.Logger;
 
   constructor(props?: XcorPlatformClientConfig) {
+    this.log = logging.getLogger('xcorplatform-client', props?.log);
     this.baseUrl = props?.baseUrl ?? DEFAULT_BASE_URL;
     // Don't set the user-agent in the browser
     if (typeof window === 'undefined') {
@@ -112,7 +120,7 @@ export class XcorPlatformClient {
   logRequests(): XcorPlatformClient {
     this.client.interceptors.request.use(
       config => {
-        log.info({config}, 'Request');
+        this.log.info().unknown('request', config).send();
         return config;
       },
       error => {
@@ -128,7 +136,7 @@ export class XcorPlatformClient {
   logResponses(): XcorPlatformClient {
     this.client.interceptors.response.use(
       config => {
-        log.info({config}, 'Response');
+        this.log.info().unknown('response', config).send();
         return config;
       },
       error => {
@@ -143,7 +151,7 @@ export class XcorPlatformClient {
     if (axios.isAxiosError(err)) {
       if (err.response) {
         if (this.logErrorResponses) {
-          log.error({response: err.response}, 'Error response');
+          this.log.error().err(err).msg('Error response');
         }
         const message = err.response.data.message;
         return [
@@ -200,7 +208,7 @@ export class XcorPlatformClient {
         params,
       });
       if (request.props.responseType) {
-        checkContentType(request.props.responseType, response);
+        checkContentType(this.log, request.props.responseType, response);
       }
       return {
         data: response.data,

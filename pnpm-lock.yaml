@@ -12,8 +12,8 @@ dependencies:
     specifier: 0.0.3-alpha.22
     version: 0.0.3-alpha.22
   '@nr1e/logging':
-    specifier: 0.0.5-alpha.3
-    version: 0.0.5-alpha.3(pino@8.17.2)
+    specifier: 0.0.5-alpha.6
+    version: 0.0.5-alpha.6(pino@8.17.2)
   axios:
     specifier: ^1.6.3
     version: 1.6.5
@@ -770,12 +770,14 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@nr1e/logging@0.0.5-alpha.3(pino@8.17.2):
-    resolution: {integrity: sha512-ODbmPakMC9hssYXAf7iLjTlweGyBo2kLbDVO3o5LiP1dZBhJjn7yvCsFvh7cnOcuRHu0fPDb0kRujruVvmrMtA==}
+  /@nr1e/logging@0.0.5-alpha.6(pino@8.17.2):
+    resolution: {integrity: sha512-cFi1ksU0eYfPucB871HPx4E8jJhv+VSxEiGqOwA/1HEBAuaz+ItBioRviXCbMSxJLm4EOII3z5NQx0thbGaxyA==}
     peerDependencies:
       pino: ^8.17.2
     dependencies:
       pino: 8.17.2
+      pino-abstract-transport: 1.1.0
+      sonic-boom: 3.8.0
       tslib: 2.6.2
     dev: false
 
