@@ -1,7 +1,7 @@
 {
   "name": "@xcorplatform/client",
   "description": "Client for the Xcor Platform API",
-  "version": "0.0.2-alpha.11",
+  "version": "0.0.2-alpha.12",
   "type": "module",
   "author": "NR1E, Inc",
   "publishConfig": {
