@@ -9,11 +9,11 @@ dependencies:
     specifier: ^6.3.1
     version: 6.3.1(zod@3.22.4)
   '@nr1e/commons':
-    specifier: 0.0.3-alpha.22
-    version: 0.0.3-alpha.22
+    specifier: 0.0.3
+    version: 0.0.3
   '@nr1e/logging':
-    specifier: 0.0.5-alpha.6
-    version: 0.0.5-alpha.6(pino@8.17.2)
+    specifier: 0.0.5
+    version: 0.0.5(pino@8.17.2)
   axios:
     specifier: ^1.6.3
     version: 1.6.5
@@ -764,14 +764,14 @@ packages:
       fastq: 1.16.0
     dev: true
 
-  /@nr1e/commons@0.0.3-alpha.22:
-    resolution: {integrity: sha512-0H4AdNMrYyqvv9vo/dpZJmC5ijHzYLdZsRSuHaRSDUSLZRlTMsAjRjzK9Vu6F57Q72wQrdEWS2BYQ0RwmpExGw==}
+  /@nr1e/commons@0.0.3:
+    resolution: {integrity: sha512-zDhYNkEFG9/exsIQBLp8LFWobCZ+wn7vPE5l2w9knY9/eXtCmfmkVJZwS6Pqb8GuNcibMbHlBpF+AJmrHimLHQ==}
     dependencies:
       tslib: 2.6.2
     dev: false
 
-  /@nr1e/logging@0.0.5-alpha.6(pino@8.17.2):
-    resolution: {integrity: sha512-cFi1ksU0eYfPucB871HPx4E8jJhv+VSxEiGqOwA/1HEBAuaz+ItBioRviXCbMSxJLm4EOII3z5NQx0thbGaxyA==}
+  /@nr1e/logging@0.0.5(pino@8.17.2):
+    resolution: {integrity: sha512-jKL/FvFkkiDn6T6nfFJ/+AHBjl43iehHcWviJB/Sj43i9wI7E4c3OShRr+Bwp6n1bOn3DD5R0Cb3OJlZiVHiHw==}
     peerDependencies:
       pino: ^8.17.2
     dependencies:
